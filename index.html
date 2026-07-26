@@ -1,1 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Video AXPRO</title>
+    <style>
+        /* Forzamos que nada se salga de la pantalla */
+        html, body { 
+            width: 100%; 
+            height: 100%; 
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden; 
+            background-color: #000;
+            position: fixed; /* Evita rebotes en Android/iOS */
+        }
 
+        .video-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Para que se vea completo en cualquier cel */
+            background: #000;
+        }
+
+        /* Botón de audio: Lo ponemos abajo para que no estorbe los controles nativos de Android */
+        #mute-btn {
+            position: absolute;
+            bottom: 80px; /* Subido para que no choque con la barra de Android */
+            right: 20px;
+            z-index: 9999; /* Prioridad máxima */
+            background: orange;
+            color: black;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-family: sans-serif;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+            display: block !important; /* Forzamos visibilidad */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="video-container">
+        <video id="miVideo" 
+               autoplay 
+               muted 
+               loop 
+               playsinline 
+               controls 
+               controlsList="nodownload">
+            <source src="easylink.mp4" type="video/mp4">
+            Tu navegador no soporta el video.
+        </video>
+
+        <button id="mute-btn" onclick="toggleMute()">🔈 ACTIVAR AUDIO</button>
+    </div>
+
+    <script>
+        const video = document.getElementById('miVideo');
+        const btn = document.getElementById('mute-btn');
+
+        // Función para el audio
+        function toggleMute() {
+            if (video.muted) {
+                video.muted = false;
+                btn.innerHTML = "🔊 QUITAR AUDIO";
+                btn.style.background = "#fff";
+            } else {
+                video.muted = true;
+                btn.innerHTML = "🔈 ACTIVAR AUDIO";
+                btn.style.background = "orange";
+            }
+        }
+
+        // HACK PARA ANDROID: Forzar que el video intente ser pantalla completa al cargar
+        window.addEventListener('load', () => {
+            video.play().catch(() => {
+                console.log("El autoplay requiere interacción");
+            });
+        });
+    </script>
+
+</body>
+</html>
